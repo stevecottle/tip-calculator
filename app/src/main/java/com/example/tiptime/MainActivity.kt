@@ -50,6 +50,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 
+
+// Main activity (app setup / scaffold):
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -66,6 +68,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Screen layout:
 @Composable
 fun TipTimeLayout() {
     Column(
@@ -82,7 +85,11 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
-        EditNumberField(modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth())
+        EditNumberField(
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
+        )
         Text(
             text = stringResource(R.string.tip_amount, "$0.00"),
             style = MaterialTheme.typography.displaySmall
@@ -91,6 +98,7 @@ fun TipTimeLayout() {
     }
 }
 
+// !!! Calculate tip logic:
 /**
  * Calculates the tip based on the user input and format the tip amount
  * according to the local currency.
@@ -101,9 +109,14 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
     return NumberFormat.getCurrencyInstance().format(tip)
 }
 
+// !!! Bill amount text field:
 @Composable
-fun EditNumberField(modifier: Modifier = Modifier, ) {
+fun EditNumberField(modifier: Modifier = Modifier ) {
     var amountInput by remember { mutableStateOf("") }
+
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
+
     TextField(
         value = amountInput,
         onValueChange = { amountInput = it },
@@ -114,6 +127,8 @@ fun EditNumberField(modifier: Modifier = Modifier, ) {
     )
     }
 
+
+// !!! Code for previewing in Android Studio:
 @Preview(showBackground = true)
 @Composable
 fun TipTimeLayoutPreview() {
